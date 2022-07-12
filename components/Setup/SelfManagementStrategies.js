@@ -4,7 +4,7 @@ import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { selfManagement } from "../../utils/crpSetupObjects";
-
+import { classes } from "../../utils/theme";
 
 const SelfManagementStrategies = () => {
     const [strategies, setStrategies] = useState([]);
@@ -72,7 +72,7 @@ const SelfManagementStrategies = () => {
 
                 {strategies.map((strategy, index) => {
                     return (
-                        <Card key={strategy.id} containerStyle={{ borderRadius: 15, borderColor: 'transparent'}}>
+                        <Card key={strategy.id} containerStyle={classes.card}>
                             <Input
                                 placeholder="Strategy"
                                 size={'lg'}

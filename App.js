@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, Button, ImageBackground, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,6 +10,23 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PersonalWarnings from "./components/Setup/PersonalWarnings";
 import { NativeBaseProvider } from 'native-base';
 import SelfManagementStrategies from "./components/Setup/SelfManagementStrategies";
+import {
+  useFonts,
+  Rubik_400Regular,
+  Rubik_300Light,
+  Rubik_300Light_Italic,
+  Rubik_400Regular_Italic,
+  Rubik_500Medium,
+  Rubik_500Medium_Italic,
+  Rubik_600SemiBold,
+  Rubik_600SemiBold_Italic,
+  Rubik_700Bold,
+  Rubik_700Bold_Italic,
+  Rubik_800ExtraBold,
+  Rubik_800ExtraBold_Italic,
+  Rubik_900Black,
+  Rubik_900Black_Italic
+} from '@expo-google-fonts/rubik';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -22,8 +39,32 @@ Notifications.setNotificationHandler({
 })
 
 const Stack = createNativeStackNavigator();
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: 'rgb(255, 45, 85)',
+    background: 'transparent'
+  },
+};
 
 export default function App() {
+  let [fontsLoaded] = useFonts({
+    Rubik_300Light,
+    Rubik_400Regular,
+    Rubik_500Medium,
+    Rubik_600SemiBold,
+    Rubik_700Bold,
+    Rubik_800ExtraBold,
+    Rubik_900Black,
+    Rubik_300Light_Italic,
+    Rubik_400Regular_Italic,
+    Rubik_500Medium_Italic,
+    Rubik_600SemiBold_Italic,
+    Rubik_700Bold_Italic,
+    Rubik_800ExtraBold_Italic,
+    Rubik_900Black_Italic
+  })
 
   const [personalWarningSigns, setPersonalWarningSigns] = useState("");
 
@@ -64,6 +105,7 @@ export default function App() {
     }
   }
 
+
   const HomeStack = createNativeStackNavigator();
 
   const HomeStackScreen = () => {
@@ -82,31 +124,39 @@ export default function App() {
   }
 
   return (
-    <NativeBaseProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Personal Warnings"
-            component={PersonalWarnings}
-          />
-          <Stack.Screen
-            name="Self Management Strategies"
-            component={SelfManagementStrategies}
-          />
-          <Stack.Screen
-            name="DailyCheck"
-            component={DailyCheck}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+    <ImageBackground source={require('./assets/bg.png')} style={styles.image}>
+      <NativeBaseProvider>
+        <NavigationContainer theme={MyTheme}>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              header: () => null
+            }}
+          >
+            <Stack.Screen
+              name="Personal Warnings"
+              component={PersonalWarnings}
+            />
+            <Stack.Screen
+              name="Self Management Strategies"
+              component={SelfManagementStrategies}
+            />
+            <Stack.Screen
+              name="DailyCheck"
+              component={DailyCheck}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NativeBaseProvider>
+    </ImageBackground>
   );
 
 }
 const styles = StyleSheet.create({
   image: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    paddingTop: 50
   }
 })
 

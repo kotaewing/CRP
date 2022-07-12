@@ -4,7 +4,9 @@ import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { personalWarnings } from "../../utils/crpSetupObjects";
+import { classes } from "../../utils/theme";
 
+const MINIMUM_NUMBER = 5;
 
 const PersonalWarnings = ({ navigation }) => {
     const [warnings, setWarnings] = useState([]);
@@ -17,14 +19,14 @@ const PersonalWarnings = ({ navigation }) => {
         let savedRaw = await AsyncStorage.getItem("warningSigns")
         let saved = JSON.parse(savedRaw)
         if (saved) {
-            if (saved.length < 5) {
-                while (saved.length < 5) {
+            if (saved.length < MINIMUM_NUMBER) {
+                while (saved.length < MINIMUM_NUMBER) {
                     saved.push(personalWarnings());
                 }
             }
         } else {
             saved = [];
-            while (saved.length < 5) {
+            while (saved.length < MINIMUM_NUMBER) {
                 saved.push(personalWarnings());
             }
         }
@@ -65,7 +67,8 @@ const PersonalWarnings = ({ navigation }) => {
                 fontSize: 26,
                 color: "#2C69B7",
                 fontWeight: "bold",
-                textAlign: 'center'
+                textAlign: 'center',
+                fontFamily: 'Rubik_600SemiBold'
             }}>
                 {"Personal Warning Signs"}
             </Text>
@@ -73,12 +76,12 @@ const PersonalWarnings = ({ navigation }) => {
 
                 {warnings.map((warning, index) => {
                     return (
-                        <Card key={warning.id} containerStyle={{ borderRadius: 15, borderColor: 'transparent'}}>
+                        <Card key={warning.id} containerStyle={classes.card}>
                             <Input
                                 placeholder="Warning Sign"
                                 size={'lg'}
                                 InputRightElement={
-                                    index < 5 ?
+                                    index < MINIMUM_NUMBER ?
                                         ""
                                         :
                                         <Icon
