@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { ScrollView } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet } from "react-native";
 import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { selfManagement } from "../../utils/crpSetupObjects";
 import { classes } from "../../utils/theme";
 
-const SelfManagementStrategies = () => {
+const SelfManagementStrategies = ({ width }) => {
     const [strategies, setStrategies] = useState([]);
 
     useEffect(() => {
@@ -56,7 +56,8 @@ const SelfManagementStrategies = () => {
     }
 
     return (
-        <ScrollView>
+
+        <ScrollView style={{ width }}>
             <Text style={{
                 paddingTop: 20,
                 paddingBottom: 20,
@@ -72,8 +73,10 @@ const SelfManagementStrategies = () => {
 
                 {strategies.map((strategy, index) => {
                     return (
+
                         <Card key={strategy.id} containerStyle={classes.card}>
                             <Input
+                                variant='unstyled'
                                 placeholder="Strategy"
                                 size={'lg'}
                                 InputRightElement={
@@ -100,5 +103,12 @@ const SelfManagementStrategies = () => {
         </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    image: {
+        flex: 1,
+        justifyContent: 'center'
+    }
+})
 
 export default SelfManagementStrategies;

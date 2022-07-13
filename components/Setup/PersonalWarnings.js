@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -8,7 +8,7 @@ import { classes } from "../../utils/theme";
 
 const MINIMUM_NUMBER = 5;
 
-const PersonalWarnings = ({ navigation }) => {
+const PersonalWarnings = ({ navigation, width }) => {
     const [warnings, setWarnings] = useState([]);
 
     useEffect(() => {
@@ -16,22 +16,26 @@ const PersonalWarnings = ({ navigation }) => {
     }, [])
 
     const savedWarnings = async () => {
-        let savedRaw = await AsyncStorage.getItem("warningSigns")
-        let saved = JSON.parse(savedRaw)
-        if (saved) {
-            if (saved.length < MINIMUM_NUMBER) {
+        try {
+            let savedRaw = await AsyncStorage.getItem("warningSigns")
+            let saved = JSON.parse(savedRaw)
+            if (saved) {
+                if (saved.length < MINIMUM_NUMBER) {
+                    while (saved.length < MINIMUM_NUMBER) {
+                        saved.push(personalWarnings());
+                    }
+                }
+            } else {
+                saved = [];
                 while (saved.length < MINIMUM_NUMBER) {
                     saved.push(personalWarnings());
                 }
             }
-        } else {
-            saved = [];
-            while (saved.length < MINIMUM_NUMBER) {
-                saved.push(personalWarnings());
-            }
-        }
 
-        setWarnings(saved);
+            setWarnings(saved);
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     const addWarningSign = () => {
@@ -59,7 +63,7 @@ const PersonalWarnings = ({ navigation }) => {
     }
 
     return (
-        <ScrollView>
+        <View width={width}>
             <Text style={{
                 paddingTop: 20,
                 paddingBottom: 20,
@@ -72,36 +76,38 @@ const PersonalWarnings = ({ navigation }) => {
             }}>
                 {"Personal Warning Signs"}
             </Text>
-            <FormControl>
+            <ScrollView>
+                <FormControl>
+                    {warnings.map((warning, index) => {
+                        return (
+                            <Card key={warning.id} containerStyle={classes.card}>
+                                <Input
+                                    variant={'unstyled'}
+                                    placeholder="Warning Sign"
+                                    size={'lg'}
+                                    InputRightElement={
+                                        index < MINIMUM_NUMBER ?
+                                            ""
+                                            :
+                                            <Icon
+                                                name='trash'
+                                                type='font-awesome'
+                                                color='red'
+                                                onPress={() => deleteWarningSign(warning.id)}
+                                            />
+                                    }
+                                    value={warning.warning}
+                                    onChangeText={(e) => handleChange(e, warning.id)}
+                                />
+                            </Card>
+                        )
+                    })}
+                </FormControl>
 
-                {warnings.map((warning, index) => {
-                    return (
-                        <Card key={warning.id} containerStyle={classes.card}>
-                            <Input
-                                placeholder="Warning Sign"
-                                size={'lg'}
-                                InputRightElement={
-                                    index < MINIMUM_NUMBER ?
-                                        ""
-                                        :
-                                        <Icon
-                                            name='trash'
-                                            type='font-awesome'
-                                            color='red'
-                                            onPress={() => deleteWarningSign(warning.id)}
-                                        />
-                                }
-                                value={warning.warning}
-                                onChangeText={(e) => handleChange(e, warning.id)}
-                            />
-                        </Card>
-                    )
-                })}
-            </FormControl>
-
-            <Button title={'Add'} buttonStyle={{ margin: 20 }} onPress={addWarningSign} />
-            <Button title={'Done'} buttonStyle={{ margin: 20 }} onPress={saveWarningSigns} />
-        </ScrollView>
+                <Button title={'Add'} buttonStyle={{ margin: 20 }} onPress={addWarningSign} />
+                <Button title={'Done'} buttonStyle={{ margin: 20 }} onPress={saveWarningSigns} />
+            </ScrollView>
+        </View>
     )
 }
 

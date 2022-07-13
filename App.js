@@ -27,6 +27,8 @@ import {
   Rubik_900Black,
   Rubik_900Black_Italic
 } from '@expo-google-fonts/rubik';
+import SplashScreen from './components/SplashScreen/SplashScreen'
+import Setup from './components/Setup/Setup';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -49,6 +51,7 @@ const MyTheme = {
 };
 
 export default function App() {
+  const [loading, setLoading] = useState(false);
   let [fontsLoaded] = useFonts({
     Rubik_300Light,
     Rubik_400Regular,
@@ -65,6 +68,15 @@ export default function App() {
     Rubik_800ExtraBold_Italic,
     Rubik_900Black_Italic
   })
+
+  useEffect(() => {
+    if (!fontsLoaded) {
+      setLoading(true)
+      console.log('hits')
+    } else {
+      setLoading(false)
+    } 
+  }, [fontsLoaded])
 
   const [personalWarningSigns, setPersonalWarningSigns] = useState("");
 
@@ -123,30 +135,42 @@ export default function App() {
     )
   }
 
+  const forFade = ({ current }) => ({
+    containerStyle: {
+      opacity: current.progress,
+    },
+  });
+
   return (
     <ImageBackground source={require('./assets/bg.png')} style={styles.image}>
       <NativeBaseProvider>
-        <NavigationContainer theme={MyTheme}>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              header: () => null
-            }}
-          >
-            <Stack.Screen
-              name="Personal Warnings"
-              component={PersonalWarnings}
-            />
-            <Stack.Screen
-              name="Self Management Strategies"
-              component={SelfManagementStrategies}
-            />
-            <Stack.Screen
-              name="DailyCheck"
-              component={DailyCheck}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        {loading ?
+          <SplashScreen />
+          :
+          <NavigationContainer theme={MyTheme}>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                header: () => null
+              }}
+            >
+              <Stack.Screen
+                name="Personal Warnings"
+                component={Setup}
+                options={{ cardStyleInterpolator: forFade }}
+              />
+              <Stack.Screen
+                name="Self Management Strategies"
+                component={SelfManagementStrategies}
+                options={{ cardStyleInterpolator: forFade }}
+              />
+              <Stack.Screen
+                name="DailyCheck"
+                component={DailyCheck}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        }
       </NativeBaseProvider>
     </ImageBackground>
   );
