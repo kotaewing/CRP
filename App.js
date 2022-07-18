@@ -75,7 +75,7 @@ export default function App() {
       console.log('hits')
     } else {
       setLoading(false)
-    } 
+    }
   }, [fontsLoaded])
 
   const [personalWarningSigns, setPersonalWarningSigns] = useState("");
@@ -155,13 +155,13 @@ export default function App() {
               }}
             >
               <Stack.Screen
-                name="Personal Warnings"
-                component={Setup}
+                name="Home"
+                component={Home}
                 options={{ cardStyleInterpolator: forFade }}
               />
               <Stack.Screen
-                name="Self Management Strategies"
-                component={SelfManagementStrategies}
+                name="Setup"
+                component={Setup}
                 options={{ cardStyleInterpolator: forFade }}
               />
               <Stack.Screen

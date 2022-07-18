@@ -6,12 +6,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { selfManagement } from "../../utils/crpSetupObjects";
 import { classes } from "../../utils/theme";
 
-const SelfManagementStrategies = ({ width }) => {
+const SelfManagementStrategies = ({ width, done }) => {
     const [strategies, setStrategies] = useState([]);
 
     useEffect(() => {
         savedStrategies();
     }, [])
+
+    useEffect(() => {
+        if (done) {
+            saveStrategies();
+        }
+    }, [done])
 
     const savedStrategies = async () => {
         let savedRaw = await AsyncStorage.getItem("selfManagementStrategies")
@@ -76,7 +82,7 @@ const SelfManagementStrategies = ({ width }) => {
 
                         <Card key={strategy.id} containerStyle={classes.card}>
                             <Input
-                                variant='unstyled'
+                                variant='underlined '
                                 placeholder="Strategy"
                                 size={'lg'}
                                 InputRightElement={
@@ -99,7 +105,7 @@ const SelfManagementStrategies = ({ width }) => {
             </FormControl>
 
             <Button title={'Add'} buttonStyle={{ margin: 20 }} onPress={addStrategy} />
-            <Button title={'Done'} buttonStyle={{ margin: 20 }} onPress={saveStrategies} />
+
         </ScrollView>
     )
 }

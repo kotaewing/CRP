@@ -1,20 +1,40 @@
 import PersonalWarnings from "./PersonalWarnings"
 import SelfManagementStrategies from "./SelfManagementStrategies"
+import ReasonsToLive from "./ReasonsToLive"
 import { FlatList, useWindowDimensions, View, Animated, StyleSheet, Text } from "react-native"
-import { Progress } from "native-base"
 import { Button } from "@rneui/themed"
 import { useRef, useState } from "react"
 
-const slides = [{ page: 'personalWarnings', id: 1 }, { page: 'selfManagementStrategies', id: 2 }, { page: 'reasonsToLive', id: 3 }, { page: 'reasonsToLive', id: 4 }]
+const slides = [
+    {
+        page: 'personalWarnings',
+        id: 1,
+        done: false
+    },
+    {
+        page: 'selfManagementStrategies',
+        id: 2,
+        done: false
+    },
+    {
+        page: 'reasonsToLive',
+        id: 3,
+        done: false
+    }
+]
 
 const SetupContainer = ({ item }) => {
     const { width } = useWindowDimensions();
     if (item.page === 'personalWarnings') {
-        return <PersonalWarnings width={width} />
+        return <PersonalWarnings width={width} done={item.done} />
     } else if (item.page === 'selfManagementStrategies') {
-        return <SelfManagementStrategies width={width} />
+        return <SelfManagementStrategies width={width} done={item.done} />
+    } else if (item.page === 'reasonsToLive') {
+        return <ReasonsToLive width={width} done={item.done} />
     }
-    return <View></View>
+    return <View>
+        <Text style={{ width }}>Hello world</Text>
+    </View>
 }
 
 const Paginator = ({ data, scrollX }) => {
@@ -31,37 +51,43 @@ const Paginator = ({ data, scrollX }) => {
                     extrapolate: 'clamp'
                 })
 
-                return <Animated.View style={[styles.dot, {width: 10, opacity, marginBottom: 0}]} key={i.toString()} />
+                return <Animated.View style={[styles.dot, { width: 10, opacity, marginBottom: 0 }]} key={i.toString()} />
             })}
         </View>
     )
 }
 
-const NextButton = ({ scrollTo }) => {
+const NextButton = ({ scrollTo, scrollBack, disabled }) => {
     const { width } = useWindowDimensions();
-    const size = 128;
-    const strokeWidth = 2;
-    const center = size / 2;
-    const radius = size / 2 - strokeWidth / 2
 
     return (
-        <View>
-            <Button title={'Next'} buttonStyle={{ padding: 20, marginTop: 0, width: width - 50, borderRadius: 15 }} onPress={scrollTo}  />
+        <View style={{ flexDirection: 'row', marginBottom: 40}}>
+            <Button title={'Back'} type={'outline'} buttonStyle={{ padding: 20, width: (width - 50) / 2, borderRadius: 15 }} onPress={scrollBack} disabled={disabled} />
+            <Button title={'Next'} buttonStyle={{ padding: 20, marginLeft: 20, width: (width - 50) / 2, borderRadius: 15 }} onPress={scrollTo} />
         </View>
     )
 }
 
-const Setup = props => {
+const Setup = ({ navigation }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
     const slidesRef = useRef(null);
 
     const scrollTo = () => {
         if (currentIndex < slides.length - 1) {
+            slides[currentIndex].done = true;
             slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
         } else {
-            console.log('Last Time')
+            slides[currentIndex].done = true;
+            navigation.navigate("Home")
         }
+    }
+
+    const scrollBack = () => {
+        if (currentIndex) {
+            slides[currentIndex - 1].done = false;
+            slidesRef.current.scrollToIndex({ index: currentIndex - 1 });
+        } 
     }
 
     const viewableItemsChanged = useRef(({ viewableItems }) => {
@@ -87,11 +113,12 @@ const Setup = props => {
                     onViewableItemsChanged={viewableItemsChanged}
                     viewabilityConfig={viewConfig}
                     ref={slidesRef}
+                    scrollEnabled={false}
                 />
             </View>
 
             <Paginator data={slides} scrollX={scrollX} />
-            <NextButton scrollTo={scrollTo}/>
+            <NextButton scrollTo={scrollTo} scrollBack={scrollBack} disabled={!currentIndex} />
         </View>
     )
 }
@@ -106,7 +133,7 @@ const styles = StyleSheet.create({
         height: 10,
         borderRadius: 5,
         backgroundColor: '#2C69B7',
-        marginHorizontal: 8, 
+        marginHorizontal: 8,
     }
 })
 

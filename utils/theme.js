@@ -17,7 +17,7 @@ export const classes = StyleSheet.create({
     card: {
         shadowColor: 'rgba(138, 149, 158, 0.2)',
         shadowOffset: {
-            width: 6,
+            width: -3,
             height: 6
         },
         shadowRadius: 3,
