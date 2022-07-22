@@ -32,6 +32,7 @@ import Setup from './src/components/Setup/Setup';
 import { Provider } from 'react-redux';
 import { Store, persistor } from './src/redux/store';
 import { PersistGate } from "redux-persist/integration/react";
+import BottomNavigation from "./src/components/BottomNavigation/BottomNavigation";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -147,26 +148,7 @@ export default function App() {
               <SplashScreen />
               :
               <NavigationContainer theme={MyTheme}>
-                <Stack.Navigator
-                  screenOptions={{
-                    headerShown: false,
-                    header: () => null,
-                    animation: 'none'
-                  }}
-                >
-                  <Stack.Screen
-                    name="Home"
-                    component={Home}
-                  />
-                  <Stack.Screen
-                    name="Setup"
-                    component={Setup}
-                  />
-                  <Stack.Screen
-                    name="DailyCheck"
-                    component={DailyCheck}
-                  />
-                </Stack.Navigator>
+                <BottomNavigation />
               </NavigationContainer>
             }
           </PersistGate>

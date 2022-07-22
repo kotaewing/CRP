@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { classes } from "../../../utils/theme";
 import { Button, Card } from "@rneui/themed";
 import { useSelector } from 'react-redux';
+import { ScrollView } from "native-base";
 
 
 Notifications.setNotificationHandler({
@@ -49,7 +50,7 @@ export default function Home({ navigation }) {
         <View
             style={{
                 flex: 1,
-                paddingTop: 50
+                paddingHorizontal: 20
             }}
         >
             <Text style={{
@@ -64,59 +65,62 @@ export default function Home({ navigation }) {
             }}>
                 {"My CRP"}
             </Text>
-            <Card containerStyle={classes.card}>
-                <Text style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: 'center',
-                    fontFamily: 'Rubik_600SemiBold',
-                    marginBottom: 10
-                }}>
-                    {"Personal Warning Signs"}
-                </Text>
-                {warnings.map(warning => {
-                    return (
-                        <Text key={warning.id}>{warning.warning}</Text>
-                    )
-                })}
-            </Card>
-            <Card containerStyle={classes.card}>
-                <Text style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: 'center',
-                    fontFamily: 'Rubik_600SemiBold',
-                    marginBottom: 10
-                }}>
-                    {"Self-Management Strategies"}
-                </Text>
-                {strategies.map(strategy => {
-                    return (
-                        <Text key={strategy.id}>{strategy.strategy}</Text>
-                    )
-                })}
-            </Card>
-            <Card containerStyle={classes.card}>
-                <Text style={{
-                    alignSelf: 'center',
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: 'center',
-                    fontFamily: 'Rubik_600SemiBold',
-                    marginBottom: 10
-                }}>
-                    {"Reasons To Live"}
-                </Text>
-                {reasons.map(reason => {
-                    return (
-                        <Text key={reason.id}>{reason.reason ? reason.reason : ""}</Text>
-                    )
-                })}
-            </Card>
-            <Button onPress={triggerNotifications} title="Trigger Notification" color="#841584" accessibilityLabel="Trigger Notification" />
-            <Button onPress={() => navigation.navigate("Setup")} title="Setup" color="#841584" accessibilityLabel="Get Data" />
+            <ScrollView>
+
+                <Card containerStyle={classes.card}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontFamily: 'Rubik_600SemiBold',
+                        marginBottom: 10
+                    }}>
+                        {"Personal Warning Signs"}
+                    </Text>
+                    {warnings.map(warning => {
+                        return (
+                            <Text key={warning.id}>{warning.warning}</Text>
+                        )
+                    })}
+                </Card>
+                <Card containerStyle={classes.card}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontFamily: 'Rubik_600SemiBold',
+                        marginBottom: 10
+                    }}>
+                        {"Self-Management Strategies"}
+                    </Text>
+                    {strategies.map(strategy => {
+                        return (
+                            <Text key={strategy.id}>{strategy.strategy}</Text>
+                        )
+                    })}
+                </Card>
+                <Card containerStyle={classes.card}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontFamily: 'Rubik_600SemiBold',
+                        marginBottom: 10
+                    }}>
+                        {"Reasons To Live"}
+                    </Text>
+                    {reasons.map(reason => {
+                        return (
+                            <Text key={reason.id}>{reason.reason ? reason.reason : ""}</Text>
+                        )
+                    })}
+                </Card>
+                <Button onPress={triggerNotifications} title="Trigger Notification" color="#841584" accessibilityLabel="Trigger Notification" />
+                <Button type="outline" buttonStyle={{ padding: 10, width: "50%", borderRadius: 15 }} onPress={() => navigation.navigate("Setup")} title="Edit CRP" color="#2C69B7" accessibilityLabel="Get Data" />
+            </ScrollView>
         </View>
     );
 
