@@ -57,13 +57,13 @@ const Paginator = ({ data, scrollX }) => {
     )
 }
 
-const NextButton = ({ scrollTo, scrollBack, disabled }) => {
+const NextButton = ({ scrollTo, scrollBack, disabled, nextText = "Next" }) => {
     const { width } = useWindowDimensions();
 
     return (
-        <View style={{ flexDirection: 'row', marginBottom: 40}}>
+        <View style={{ flexDirection: 'row', marginBottom: 40 }}>
             <Button title={'Back'} type={'outline'} buttonStyle={{ padding: 20, width: (width - 50) / 2, borderRadius: 15 }} onPress={scrollBack} disabled={disabled} />
-            <Button title={'Next'} buttonStyle={{ padding: 20, marginLeft: 20, width: (width - 50) / 2, borderRadius: 15 }} onPress={scrollTo} />
+            <Button title={nextText} buttonStyle={{ padding: 20, marginLeft: 20, width: (width - 50) / 2, borderRadius: 15 }} onPress={scrollTo} />
         </View>
     )
 }
@@ -87,7 +87,10 @@ const Setup = ({ navigation }) => {
         if (currentIndex) {
             slides[currentIndex - 1].done = false;
             slidesRef.current.scrollToIndex({ index: currentIndex - 1 });
-        } 
+        } else {
+            slides[currentIndex].done = true;
+            navigation.navigate("Home")
+        }
     }
 
     const viewableItemsChanged = useRef(({ viewableItems }) => {
@@ -118,7 +121,7 @@ const Setup = ({ navigation }) => {
             </View>
 
             <Paginator data={slides} scrollX={scrollX} />
-            <NextButton scrollTo={scrollTo} scrollBack={scrollBack} disabled={!currentIndex} />
+            <NextButton scrollTo={scrollTo} scrollBack={scrollBack} nextText={currentIndex < slides.length - 1 ? "Next" : "Done"} />
         </View>
     )
 }

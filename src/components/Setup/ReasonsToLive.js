@@ -1,30 +1,28 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { reasonsToLive } from "../../utils/crpSetupObjects";
-import { classes } from "../../utils/theme";
+import { reasonsToLive } from "../../../utils/crpSetupObjects";
+import { classes } from "../../../utils/theme";
+import { connect, useSelector } from 'react-redux';
+import { setReasons } from "../../redux/crpActions";
 
 const MINIMUM_NUMBER = 5;
 
-const ReasonsToLive = ({ width, done }) => {
-    const [reasons, setReasons] = useState([]);
+const ReasonsToLive = ({ setReasons, width, done }) => {
+    const { reasons } = useSelector(state => state.crpReducer);
 
     useEffect(() => {
         savedReasons();
     }, [])
 
     useEffect(() => {
-        if (done) {
-            saveReasonsToLive();
-        }
+
     }, [done])
 
     const savedReasons = async () => {
         try {
-            let savedRaw = await AsyncStorage.getItem("reasonsToLive")
-            let saved = JSON.parse(savedRaw)
+            let saved = JSON.parse(JSON.stringify(reasons))
             if (saved) {
                 if (saved.length < MINIMUM_NUMBER) {
                     while (saved.length < MINIMUM_NUMBER) {
@@ -47,10 +45,6 @@ const ReasonsToLive = ({ width, done }) => {
     const addReasonToLive = () => {
         const reason = reasonsToLive();
         setReasons([...reasons, reason]);
-    }
-
-    const saveReasonsToLive = async () => {
-        await AsyncStorage.setItem("reasonsToLive", JSON.stringify(reasons))
     }
 
     const handleChange = (text, reasonId) => {
@@ -116,4 +110,7 @@ const ReasonsToLive = ({ width, done }) => {
     )
 }
 
-export default ReasonsToLive;
+const mapActionsToProps = {
+    setReasons
+}
+export default connect(null, mapActionsToProps)(ReasonsToLive);

@@ -4,12 +4,12 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DailyCheck from './components/DailyCheck/DailyCheck';
-import Home from "./components/Home/Home";
+import DailyCheck from './src/components/DailyCheck/DailyCheck';
+import Home from "./src/components/Home/Home";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PersonalWarnings from "./components/Setup/PersonalWarnings";
+import PersonalWarnings from "./src/components/Setup/PersonalWarnings";
 import { NativeBaseProvider } from 'native-base';
-import SelfManagementStrategies from "./components/Setup/SelfManagementStrategies";
+import SelfManagementStrategies from "./src/components/Setup/SelfManagementStrategies";
 import {
   useFonts,
   Rubik_400Regular,
@@ -27,8 +27,11 @@ import {
   Rubik_900Black,
   Rubik_900Black_Italic
 } from '@expo-google-fonts/rubik';
-import SplashScreen from './components/SplashScreen/SplashScreen'
-import Setup from './components/Setup/Setup';
+import SplashScreen from './src/components/SplashScreen/SplashScreen'
+import Setup from './src/components/Setup/Setup';
+import { Provider } from 'react-redux';
+import { Store, persistor } from './src/redux/store';
+import { PersistGate } from "redux-persist/integration/react";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -135,42 +138,39 @@ export default function App() {
     )
   }
 
-  const forFade = ({ current }) => ({
-    containerStyle: {
-      opacity: current.progress,
-    },
-  });
-
   return (
     <ImageBackground source={require('./assets/bg.png')} style={styles.image}>
       <NativeBaseProvider>
-        {loading ?
-          <SplashScreen />
-          :
-          <NavigationContainer theme={MyTheme}>
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-                header: () => null
-              }}
-            >
-              <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{ cardStyleInterpolator: forFade }}
-              />
-              <Stack.Screen
-                name="Setup"
-                component={Setup}
-                options={{ cardStyleInterpolator: forFade }}
-              />
-              <Stack.Screen
-                name="DailyCheck"
-                component={DailyCheck}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        }
+        <Provider store={Store}>
+          <PersistGate loading={<SplashScreen />} persistor={persistor}>
+            {loading ?
+              <SplashScreen />
+              :
+              <NavigationContainer theme={MyTheme}>
+                <Stack.Navigator
+                  screenOptions={{
+                    headerShown: false,
+                    header: () => null,
+                    animation: 'none'
+                  }}
+                >
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                  />
+                  <Stack.Screen
+                    name="Setup"
+                    component={Setup}
+                  />
+                  <Stack.Screen
+                    name="DailyCheck"
+                    component={DailyCheck}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            }
+          </PersistGate>
+        </Provider>
       </NativeBaseProvider>
     </ImageBackground>
   );

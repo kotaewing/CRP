@@ -1,27 +1,25 @@
-import { useState, useEffect } from "react";
-import { ImageBackground, ScrollView, StyleSheet } from "react-native";
+import { useEffect } from "react";
+import { ScrollView } from "react-native";
 import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { selfManagement } from "../../utils/crpSetupObjects";
-import { classes } from "../../utils/theme";
+import { selfManagement } from "../../../utils/crpSetupObjects";
+import { classes } from "../../../utils/theme";
+import { connect, useSelector } from "react-redux";
+import { setStrategies } from "../../redux/crpActions";
 
-const SelfManagementStrategies = ({ width, done }) => {
-    const [strategies, setStrategies] = useState([]);
+const SelfManagementStrategies = ({ setStrategies, width, done }) => {
+    const { strategies } = useSelector(state => state.crpReducer);
 
     useEffect(() => {
         savedStrategies();
     }, [])
 
     useEffect(() => {
-        if (done) {
-            saveStrategies();
-        }
+        
     }, [done])
 
     const savedStrategies = async () => {
-        let savedRaw = await AsyncStorage.getItem("selfManagementStrategies")
-        let saved = JSON.parse(savedRaw)
+        let saved = JSON.parse(JSON.stringify(strategies))
         if (saved) {
             if (saved.length < 3) {
                 while (saved.length < 3) {
@@ -41,10 +39,6 @@ const SelfManagementStrategies = ({ width, done }) => {
     const addStrategy = () => {
         const strategy = selfManagement();
         setStrategies([...strategies, strategy]);
-    }
-
-    const saveStrategies = async () => {
-        await AsyncStorage.setItem("selfManagementStrategies", JSON.stringify(strategies))
     }
 
     const handleChange = (text, strategyId) => {
@@ -110,11 +104,8 @@ const SelfManagementStrategies = ({ width, done }) => {
     )
 }
 
-const styles = StyleSheet.create({
-    image: {
-        flex: 1,
-        justifyContent: 'center'
-    }
-})
+const mapActionsToProps = {
+    setStrategies
+}
 
-export default SelfManagementStrategies;
+export default connect(null, mapActionsToProps)(SelfManagementStrategies);

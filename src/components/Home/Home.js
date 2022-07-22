@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { View, Text } from "react-native";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { classes } from "../../utils/theme";
-import { Icon, Button, Card } from "@rneui/themed";
+import { classes } from "../../../utils/theme";
+import { Button, Card } from "@rneui/themed";
+import { useSelector } from 'react-redux';
 
 
 Notifications.setNotificationHandler({
@@ -18,10 +19,7 @@ Notifications.setNotificationHandler({
 })
 
 export default function Home({ navigation }) {
-
-    const [personalWarningSigns, setPersonalWarningSigns] = useState([]);
-    const [selfManagement, setSelfManagement] = useState([]);
-    const [reasonsToLive, setReasonsToLive] = useState([])
+    const { warnings, strategies, reasons, social, professional } = useSelector(state => state.crpReducer);
 
     useEffect(() => {
         Permissions.getAsync(Permissions.NOTIFICATIONS).then((statusObj) => {
@@ -34,7 +32,6 @@ export default function Home({ navigation }) {
                 return;
             }
         })
-        getData()
     }, [])
 
     const triggerNotifications = async () => {
@@ -46,20 +43,6 @@ export default function Home({ navigation }) {
             trigger: { seconds: 2 }
         })
         await AsyncStorage.setItem("personalWarningSigns", "This is my warning")
-    }
-
-    const getData = async () => {
-        try {
-            const warnings = await AsyncStorage.getItem("warningSigns");
-            const strategies = await AsyncStorage.getItem("selfManagementStrategies")
-            const reasons = await AsyncStorage.getItem("reasonsToLive")
-            console.log(reasons)
-            setPersonalWarningSigns(JSON.parse(warnings))
-            setSelfManagement(JSON.parse(strategies))
-            setReasonsToLive(JSON.parse(reasons))
-        } catch (err) {
-
-        }
     }
 
     return (
@@ -92,7 +75,7 @@ export default function Home({ navigation }) {
                 }}>
                     {"Personal Warning Signs"}
                 </Text>
-                {personalWarningSigns.map(warning => {
+                {warnings.map(warning => {
                     return (
                         <Text key={warning.id}>{warning.warning}</Text>
                     )
@@ -109,7 +92,7 @@ export default function Home({ navigation }) {
                 }}>
                     {"Self-Management Strategies"}
                 </Text>
-                {selfManagement.map(strategy => {
+                {strategies.map(strategy => {
                     return (
                         <Text key={strategy.id}>{strategy.strategy}</Text>
                     )
@@ -126,14 +109,13 @@ export default function Home({ navigation }) {
                 }}>
                     {"Reasons To Live"}
                 </Text>
-                {reasonsToLive.map(reason => {
+                {reasons.map(reason => {
                     return (
                         <Text key={reason.id}>{reason.reason ? reason.reason : ""}</Text>
                     )
                 })}
             </Card>
             <Button onPress={triggerNotifications} title="Trigger Notification" color="#841584" accessibilityLabel="Trigger Notification" />
-            <Button onPress={getData} title="Get Data" color="#841584" accessibilityLabel="Get Data" />
             <Button onPress={() => navigation.navigate("Setup")} title="Setup" color="#841584" accessibilityLabel="Get Data" />
         </View>
     );

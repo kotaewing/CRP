@@ -1,30 +1,28 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Icon, Button, Card } from "@rneui/themed";
 import { Input, Text, FormControl } from "native-base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { personalWarnings } from "../../utils/crpSetupObjects";
-import { classes } from "../../utils/theme";
+import { personalWarnings } from "../../../utils/crpSetupObjects";
+import { classes } from "../../../utils/theme";
+import { useSelector, connect } from "react-redux";
+import { setWarnings } from "../../redux/crpActions";
 
 const MINIMUM_NUMBER = 5;
 
-const PersonalWarnings = ({ width, done }) => {
-    const [warnings, setWarnings] = useState([]);
+const PersonalWarnings = ({ setWarnings, width, done }) => {
+    const { warnings } = useSelector(state => state.crpReducer)
 
     useEffect(() => {
         savedWarnings();
     }, [])
 
     useEffect(() => {
-        if (done) {
-            saveWarningSigns();
-        }
+
     }, [done])
 
     const savedWarnings = async () => {
         try {
-            let savedRaw = await AsyncStorage.getItem("warningSigns")
-            let saved = JSON.parse(savedRaw)
+            let saved = JSON.parse(JSON.stringify(warnings))
             if (saved) {
                 if (saved.length < MINIMUM_NUMBER) {
                     while (saved.length < MINIMUM_NUMBER) {
@@ -47,10 +45,6 @@ const PersonalWarnings = ({ width, done }) => {
     const addWarningSign = () => {
         const warning = personalWarnings();
         setWarnings([...warnings, warning]);
-    }
-
-    const saveWarningSigns = async () => {
-        await AsyncStorage.setItem("warningSigns", JSON.stringify(warnings))
     }
 
     const handleChange = (text, warningId) => {
@@ -116,4 +110,8 @@ const PersonalWarnings = ({ width, done }) => {
     )
 }
 
-export default PersonalWarnings;
+const mapActionsToProps = {
+    setWarnings
+}
+
+export default connect(null, mapActionsToProps)(PersonalWarnings);
