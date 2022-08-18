@@ -1,23 +1,47 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Button, Icon } from "@rneui/themed";
 
 import Home from "../Home/Home";
 import DailyCheck from "../DailyCheck/DailyCheck";
+import Setup from "../Setup/Setup";
 
 const Tab = createBottomTabNavigator();
+
+const HomeStack = createNativeStackNavigator();
+
+const HomeStackScreen = () => {
+    return (
+        <HomeStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                header: () => null,
+                animation: 'none'
+            }}
+        >
+            <HomeStack.Screen
+                name="Home"
+                component={Home}
+            />
+            <HomeStack.Screen
+                name="Setup"
+                component={Setup}
+            />
+        </HomeStack.Navigator>
+    )
+}
 
 const BottomNavigation = () => {
     return (
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                header: () => null,
-                animation: 'none'
+                header: () => null
             }}
             tabBar={props => <MyTabBar {...props} />}
         >
-            <Tab.Screen name="Home" component={Home} />
+            <Tab.Screen name="Home" component={HomeStackScreen} />
             <Tab.Screen name="DailyCheck" component={DailyCheck} />
         </Tab.Navigator>
     )
@@ -30,14 +54,16 @@ function MyTabBar({ state, descriptors, navigation }) {
             style={{
                 flexDirection: 'row',
                 backgroundColor: '#2C69B7',
+                marginTop: 20,
                 height: 85,
-                position: 'absolute',
+                // position: 'absolute',
                 bottom: 25,
-                left: 20,
-                right: 20,
+                // left: 20,
+                // right: 20,
                 borderRadius: 15,
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                marginHorizontal: 20
             }}
         >
             {state.routes.map((route, index) => {
@@ -77,7 +103,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                     } else if (label === "DailyCheck") {
                         return "smile"
                     }
-                } 
+                }
 
                 return (
                     <>
