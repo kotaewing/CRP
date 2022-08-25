@@ -8,7 +8,7 @@ import { Button, Card } from "@rneui/themed";
 import { useSelector } from 'react-redux';
 import { ScrollView } from "native-base";
 
-
+// Use this for notification config -- figure out where to put once cron is setup
 Notifications.setNotificationHandler({
     handleNotification: async () => {
         return {
@@ -19,21 +19,8 @@ Notifications.setNotificationHandler({
     }
 })
 
-export default function Home({ navigation }) {
+const Home = ({ navigation }) => {
     const { warnings, strategies, reasons, social, professional } = useSelector(state => state.crpReducer);
-
-    useEffect(() => {
-        Permissions.getAsync(Permissions.NOTIFICATIONS).then((statusObj) => {
-            if (statusObj.status !== "granted") {
-                return Permissions.askAsync(Permissions.NOTIFICATIONS)
-            }
-            return statusObj;
-        }).then((statusObj) => {
-            if (statusObj.status !== "granted") {
-                return;
-            }
-        })
-    }, [])
 
     const triggerNotifications = async () => {
         await Notifications.scheduleNotificationAsync({
@@ -125,4 +112,6 @@ export default function Home({ navigation }) {
     );
 
 }
+
+export default Home;
 

@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Button, Icon } from "@rneui/themed";
+import { classes } from "../../../utils/theme";
 
 import Home from "../Home/Home";
 import DailyCheck from "../DailyCheck/DailyCheck";
@@ -51,20 +52,7 @@ const BottomNavigation = () => {
 function MyTabBar({ state, descriptors, navigation }) {
     return (
         <View
-            style={{
-                flexDirection: 'row',
-                backgroundColor: '#2C69B7',
-                marginTop: 20,
-                height: 85,
-                // position: 'absolute',
-                bottom: 25,
-                // left: 20,
-                // right: 20,
-                borderRadius: 15,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginHorizontal: 20
-            }}
+            style={classes.bottomNavigation}
         >
             {state.routes.map((route, index) => {
                 const { options } = descriptors[route.key];
@@ -118,7 +106,7 @@ function MyTabBar({ state, descriptors, navigation }) {
                             <Icon
                                 name={icon()}
                                 type='feather'
-                                color={isFocused ? 'white' : "gray"}
+                                color={isFocused ? '#2C69B7' : "gray"}
                                 size={40}
                             />
                         </Button>
