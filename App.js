@@ -34,17 +34,6 @@ import { Store, persistor } from './src/redux/store';
 import { PersistGate } from "redux-persist/integration/react";
 import BottomNavigation from "./src/components/BottomNavigation/BottomNavigation";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true,
-    }
-  }
-})
-
-const Stack = createNativeStackNavigator();
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -54,8 +43,10 @@ const MyTheme = {
   },
 };
 
-export default function App() {
+ const App = () => {
   const [loading, setLoading] = useState(false);
+
+  // Check what we can do to make this work
   let [fontsLoaded] = useFonts({
     Rubik_300Light,
     Rubik_400Regular,
@@ -82,8 +73,6 @@ export default function App() {
     }
   }, [fontsLoaded])
 
-  const [personalWarningSigns, setPersonalWarningSigns] = useState("");
-
   useEffect(() => {
     Permissions.getAsync(Permissions.NOTIFICATIONS).then((statusObj) => {
       if (statusObj.status !== "granted") {
@@ -95,49 +84,7 @@ export default function App() {
         return;
       }
     })
-    getData()
   }, [])
-
-  const triggerNotifications = async () => {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "How are you feeling today?",
-        body: "Check in on the app to keep track"
-      },
-      trigger: { seconds: 2 }
-    })
-    await AsyncStorage.setItem("personalWarningSigns", "This is my warning")
-  }
-
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem(new Date().toDateString());
-
-      if (value !== null) {
-        setPersonalWarningSigns(value)
-      }
-    } catch (err) {
-
-    }
-  }
-
-
-  const HomeStack = createNativeStackNavigator();
-
-  const HomeStackScreen = () => {
-    return (
-      <HomeStack.Navigator>
-        <HomeStack.Screen
-          name="Home"
-          component={Home}
-        />
-        <HomeStack
-          name="Setup"
-          component={PersonalWarnings}
-        />
-      </HomeStack.Navigator>
-    )
-  }
 
   return (
     <ImageBackground source={require('./assets/bg.png')} style={styles.image}>
@@ -158,6 +105,9 @@ export default function App() {
   );
 
 }
+
+export default App;
+
 const styles = StyleSheet.create({
   image: {
     flex: 1,
