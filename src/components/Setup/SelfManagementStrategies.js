@@ -8,7 +8,7 @@ import { connect, useSelector } from "react-redux";
 import { setStrategies } from "../../redux/crpActions";
 
 const SelfManagementStrategies = ({ setStrategies, width, done }) => {
-    const { strategies } = useSelector(state => state.crpReducer);
+    const { strategies } = useSelector(state => state.crp);
 
     useEffect(() => {
         savedStrategies();

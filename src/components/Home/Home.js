@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, useWindowDimensions, Animated } from "react-native";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,6 +7,8 @@ import { classes } from "../../../utils/theme";
 import { Button, Card } from "@rneui/themed";
 import { useSelector } from 'react-redux';
 import { ScrollView } from "native-base";
+import NeuMorph from "../NeuMorphComponents/NeuMorph";
+import { outerShadow } from "../../../utils/globalAnimations";
 
 // Use this for notification config -- figure out where to put once cron is setup
 Notifications.setNotificationHandler({
@@ -20,7 +22,9 @@ Notifications.setNotificationHandler({
 })
 
 const Home = ({ navigation }) => {
-    const { warnings, strategies, reasons, social, professional } = useSelector(state => state.crpReducer);
+    const { warnings, strategies, reasons, social, professional } = useSelector(state => state.crp);
+
+    const screen = useWindowDimensions();
 
     const triggerNotifications = async () => {
         await Notifications.scheduleNotificationAsync({
@@ -36,25 +40,26 @@ const Home = ({ navigation }) => {
     return (
         <View
             style={{
-                flex: 1,
-                paddingHorizontal: 20
+                flex: 1
             }}
         >
-            <Text style={{
-                paddingTop: 20,
-                paddingBottom: 20,
-                alignSelf: 'center',
-                fontSize: 26,
-                color: "#2C69B7",
-                fontWeight: "bold",
-                textAlign: 'center',
-                fontFamily: 'Rubik_600SemiBold'
-            }}>
+            <Animated.Text style={[
+                classes.headerText,
+                {
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    alignSelf: 'center',
+                    fontSize: 26,
+                    fontWeight: "bold",
+                    textAlign: 'center',
+                    fontFamily: 'Rubik_600SemiBold',
+                    opacity: outerShadow
+                }
+            ]}>
                 {"My CRP"}
-            </Text>
-            <ScrollView>
-
-                <Card containerStyle={classes.card}>
+            </Animated.Text>
+            <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <NeuMorph width={screen.width - 40} height={100} style={{ paddingTop: 1 }}>
                     <Text style={{
                         alignSelf: 'center',
                         fontSize: 16,
@@ -67,11 +72,11 @@ const Home = ({ navigation }) => {
                     </Text>
                     {warnings.map(warning => {
                         return (
-                            <Text key={warning.id}>{warning.warning}</Text>
+                            <Text key={warning.id} style={{ alignSelf: 'flex-start', marginLeft: 20 }}>{warning.warning}</Text>
                         )
                     })}
-                </Card>
-                <Card containerStyle={classes.card}>
+                </NeuMorph>
+                {/* <Card containerStyle={classes.card}>
                     <Text style={{
                         alignSelf: 'center',
                         fontSize: 16,
@@ -106,7 +111,7 @@ const Home = ({ navigation }) => {
                     })}
                 </Card>
                 <Button onPress={triggerNotifications} title="Trigger Notification" color="#841584" accessibilityLabel="Trigger Notification" />
-                <Button type="outline" buttonStyle={{ padding: 10, width: "50%", borderRadius: 15 }} onPress={() => navigation.navigate("Setup")} title="Edit CRP" color="#2C69B7" accessibilityLabel="Get Data" />
+                <Button type="outline" buttonStyle={{ padding: 10, width: "50%", borderRadius: 15 }} onPress={() => navigation.navigate("Setup")} title="Edit CRP" color="#2C69B7" accessibilityLabel="Get Data" /> */}
             </ScrollView>
         </View>
     );

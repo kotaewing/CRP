@@ -1,16 +1,26 @@
-import { SET_PERSONAL_WARNINGS, SET_SELF_MANGEMENT_STRATEGIES, SET_REASONS_TO_LIVE, SET_SOCIAL_SUPPORT, SET_PROFESSIONAL_SUPPORT } from "./crpActions";
+import {
+    SET_PERSONAL_WARNINGS,
+    SET_SELF_MANGEMENT_STRATEGIES,
+    SET_REASONS_TO_LIVE,
+    SET_SOCIAL_SUPPORT,
+    SET_PROFESSIONAL_SUPPORT,
+    ADD_DAILY_CHECK
+} from "./crpActions";
 
 const initialState = {
     warnings: [],
     strategies: [],
     reasons: [],
     social: [],
-    professional: []
+    professional: [],
+    dailyChecks: [],
+    mainHue: "208",
+    secondaryHue: "216"
 }
 
 function crpReducer(state = initialState, action) {
-    switch(action.type) {
-        case SET_PERSONAL_WARNINGS: 
+    switch (action.type) {
+        case SET_PERSONAL_WARNINGS:
             return { ...state, warnings: action.payload }
         case SET_SELF_MANGEMENT_STRATEGIES:
             return { ...state, strategies: action.payload }
@@ -20,9 +30,11 @@ function crpReducer(state = initialState, action) {
             return { ...state, social: action.payload }
         case SET_PROFESSIONAL_SUPPORT:
             return { ...state, professional: action.payload }
+        case ADD_DAILY_CHECK:
+            return { ...state, dailyChecks: action.payload }
         default:
-            return state;
-    }   
+            return {...state};
+    }
 }
 
 export default crpReducer;

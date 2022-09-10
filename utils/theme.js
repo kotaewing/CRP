@@ -1,5 +1,12 @@
 import { extendTheme } from "native-base";
 import { StyleSheet } from "react-native";
+import { Store } from "../src/redux/store";
+
+const state = Store.getState();
+
+export const textColor = state.app.textColor;
+export const bgColor = `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`;
+export const disabledColor = `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`;
 
 export const theme = extendTheme({
   colors: {},
@@ -11,6 +18,12 @@ export const theme = extendTheme({
 });
 
 export const classes = StyleSheet.create({
+  background: {
+    backgroundColor: `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`,
+    flex: 1,
+    justifyContent: 'center',
+    paddingTop: 50,
+  },
   card: {
     shadowColor: "rgba(138, 149, 158, 0.2)",
     shadowOffset: {
@@ -27,23 +40,45 @@ export const classes = StyleSheet.create({
   },
 
   bottomNavigation: {
-    shadowColor: "rgba(138, 149, 158, 0.2)",
-    shadowOffset: {
-      width: 10,
-      height: -2,
-    },
-    shadowRadius: 10,
-    shadowOpacity: 1,
-    borderRadius: 15,
     borderColor: "transparent",
     flexDirection: "row",
-    backgroundColor: "#FFF",
+    backgroundColor: `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`,
     marginTop: 20,
-    height: 85,
-    bottom: 25,
+    height: 125,
+    bottom: 0,
     borderRadius: 15,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
-    marginHorizontal: 20,
+    marginHorizontal: 0,
+    padding: 0
   },
+
+  inner: {
+    backgroundColor: '#DEE9F7',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#E2ECFD',
+    borderWidth: 1,
+
+  },
+  pressedInner: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dailyCheckButtonContainer: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+  },
+  headerText: {
+    alignSelf: 'center',
+    fontSize: 28,
+    color: textColor,
+    fontWeight: "bold",
+  },
+  subText: {
+    fontSize: 22,
+    color: textColor,
+    fontWeight: "bold",
+  }
 });

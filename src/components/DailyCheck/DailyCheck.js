@@ -1,70 +1,111 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Slider, Text, Icon, Button } from '@rneui/themed';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Animated } from 'react-native';
+import { Text, Button } from '@rneui/themed';
+import { addDailyCheck } from '../../redux/crpActions';
+import { connect, useSelector } from 'react-redux';
+import { classes, textColor, bgColor } from '../../../utils/theme';
+import NeuMorph from '../NeuMorphComponents/NeuMorph';
+import { outerShadow, textAnimation } from '../../../utils/globalAnimations';
+import NeuMorphButton from '../NeuMorphComponents/NeuMorphButton';
 
-const DailyCheck = ({ navigation }) => {
+const BUTTONS = [
+    {
+        id: 1,
+        value: 1
+    },
+    {
+        id: 2,
+        value: 2
+    },
+    {
+        id: 3,
+        value: 3
+    },
+    {
+        id: 4,
+        value: 4
+    },
+    {
+        id: 5,
+        value: 5
+    },
+    {
+        id: 6,
+        value: 6
+    },
+    {
+        id: 7,
+        value: 7
+    },
+    {
+        id: 8,
+        value: 8
+    },
+    {
+        id: 9,
+        value: 9
+    },
+    {
+        id: 10,
+        value: 10
+    }
+]
+
+const DailyCheck = ({ navigation, addDailyCheck }) => {
     const [rating, setRating] = useState(0);
 
-    const markDone = async () => {
-        await AsyncStorage.setItem(new Date().toDateString(), rating.toString())
-        if (rating >= 8) {
-            navigation.navigate('Home')
-        } else if (rating < 8 && rating >= 6) {
+    navigation.addListener('beforeBlur', () => setRating(0))
 
+    const textColorInterpolation = textAnimation.interpolate({
+        inputRange: [0.01, 1],
+        outputRange: [textColor, bgColor]
+    })
+
+    const markDone = () => {
+        const dailyCheckObj = {
+            date: new Date(),
+            rating: rating
+        };
+        addDailyCheck(dailyCheckObj)
+        if (rating >= 8) {
+            navigation.navigate('TodaysFocus')
+        } else if (rating < 8 && rating >= 6) {
+            console.log("I'm sorry")
         }
     }
 
     return (
         <>
             <View style={[styles.contentView]}>
-                <Text style={{
-                    paddingBottom: 20,
-                    alignSelf: 'center',
-                    fontSize: 26,
-                    color: "#2C69B7",
-                    fontWeight: "bold",
-                    textAlign: 'center'
-                }}>
-                    {"On a scale of 1-10, how would you rate yourself today?"}
-                </Text>
-                <Text style={{
-                    paddingBottom: 20,
-                    alignSelf: 'center',
-                    fontSize: 30,
-                    color: "#2C69B7",
-                    fontWeight: "bold"
-                }}
-                >
-                    {rating}
-                </Text>
-                <Slider
-                    value={rating}
-                    onValueChange={setRating}
-                    maximumValue={10}
-                    minimumValue={1}
-                    step={1}
-                    allowTouchTrack
-                    trackStyle={{ height: 10, borderRadius: 20, backgroundColor: "#2C69B7" }}
-                    thumbStyle={{ height: 20, width: 20, backgroundColor: 'red' }}
-                    thumbProps={{
-                        children: (
-                            <Icon
-                                size={30}
-                                reverse
-                                containerStyle={{ bottom: 30, right: 30 }}
-                                color={"#2C69B7"}
-                            />
-                        ),
-                    }}
-                />
-                <Button
-                    title={"Done"}
-                    type="solid"
-                    color={"#2C69B7"}
-                    buttonStyle={{ borderRadius: 50, marginTop: 50 }}
-                    onPress={markDone}
-                />
+                <Animated.View style={{ opacity: outerShadow }}>
+                    <Text style={[classes.headerText, { marginBottom: 20 }]}>
+                        {"Daily Check"}
+                    </Text>
+                    <Text style={[classes.subText, { alignSelf: 'center', marginBottom: 20 }]}>
+                        {"How are you doing today?"}
+                    </Text>
+                </Animated.View>
+
+                <View style={[classes.dailyCheckButtonContainer, { marginBottom: 30 }]}>
+                    {BUTTONS.map(button => {
+                        const buttonAnimationVal = new Animated.Value(0.01);
+
+                        const buttonColorInterpolation = buttonAnimationVal.interpolate({
+                            inputRange: [0.01, 1],
+                            outputRange: [textColor, bgColor]
+                        })
+                        return (
+                            <NeuMorph height={80} width={80} key={button.id} containerStyle={{ margin: 12 }} pressed={rating === button.value} customPressAnimation={{ pressAnimation: buttonAnimationVal, exists: true }} onPress={() => setRating(button.value)}>
+                                <Animated.Text style={{ fontSize: 32, fontWeight: 'bold', color: buttonColorInterpolation }}>
+                                    {button.value}
+                                </Animated.Text>
+                            </NeuMorph>
+                        )
+                    })}
+                </View>
+
+                <NeuMorphButton buttonText={"Done"} disabled={rating < 1} height={50} width={200} onPress={markDone} containerStyle={{ alignSelf: 'center' }} />
+
             </View>
         </>
     );
@@ -75,8 +116,12 @@ const styles = StyleSheet.create({
         padding: 30,
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'stretch'
+        alignItems: 'stretch',
     }
 });
 
-export default DailyCheck;
+const mapActionsToProps = {
+    addDailyCheck
+}
+
+export default connect(null, mapActionsToProps)(DailyCheck);

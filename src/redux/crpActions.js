@@ -3,6 +3,9 @@ export const SET_SELF_MANGEMENT_STRATEGIES = "SET_SELF_MANGEMENT_STRATEGIES";
 export const SET_REASONS_TO_LIVE = "SET_REASONS_TO_LIVE";
 export const SET_SOCIAL_SUPPORT = "SET_SOCIAL_SUPPORT";
 export const SET_PROFESSIONAL_SUPPORT = "SET_PROFESSIONAL_SUPPORT";
+export const ADD_DAILY_CHECK = "ADD_DAILY_CHECK";
+export const GET_LAST_DAILY_CHECK = "GET_LAST_DAILY_CHECK";
+export const GET_ALL_DAILY_CHECKS = "GET_ALL_DAILY_CHECKS";
 
 export const setWarnings = warnings => dispatch => {
     dispatch({
@@ -36,5 +39,12 @@ export const setProfessional = professional => dispatch => {
     dispatch({
         type: SET_PROFESSIONAL_SUPPORT,
         payload: professional
+    })
+}
+
+export const addDailyCheck = check => dispatch => {
+    dispatch({
+        type: ADD_DAILY_CHECK,
+        payload: check
     })
 }

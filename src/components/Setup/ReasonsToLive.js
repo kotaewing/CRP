@@ -10,7 +10,7 @@ import { setReasons } from "../../redux/crpActions";
 const MINIMUM_NUMBER = 5;
 
 const ReasonsToLive = ({ setReasons, width, done }) => {
-    const { reasons } = useSelector(state => state.crpReducer);
+    const { reasons } = useSelector(state => state.crp);
 
     useEffect(() => {
         savedReasons();

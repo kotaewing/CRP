@@ -10,7 +10,7 @@ import { setWarnings } from "../../redux/crpActions";
 const MINIMUM_NUMBER = 5;
 
 const PersonalWarnings = ({ setWarnings, width, done }) => {
-    const { warnings } = useSelector(state => state.crpReducer)
+    const { warnings } = useSelector(state => state.crp)
 
     useEffect(() => {
         savedWarnings();

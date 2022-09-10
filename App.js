@@ -10,6 +10,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import PersonalWarnings from "./src/components/Setup/PersonalWarnings";
 import { NativeBaseProvider } from 'native-base';
 import SelfManagementStrategies from "./src/components/Setup/SelfManagementStrategies";
+import { classes } from "./utils/theme";
 import {
   useFonts,
   Rubik_400Regular,
@@ -87,10 +88,10 @@ const MyTheme = {
   }, [])
 
   return (
-    <ImageBackground source={require('./assets/bg.png')} style={styles.image}>
+    <View style={classes.background}>
       <NativeBaseProvider>
         <Provider store={Store}>
-          <PersistGate loading={<SplashScreen />} persistor={persistor}>
+          <PersistGate loading={null} persistor={persistor}>
             {loading ?
               <SplashScreen />
               :
@@ -101,18 +102,11 @@ const MyTheme = {
           </PersistGate>
         </Provider>
       </NativeBaseProvider>
-    </ImageBackground>
+    </View>
   );
 
 }
 
 export default App;
 
-const styles = StyleSheet.create({
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingTop: 50
-  }
-})
 
