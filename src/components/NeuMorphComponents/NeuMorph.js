@@ -1,57 +1,60 @@
-import { View, TouchableWithoutFeedback } from "react-native";
+import { View, Pressable } from "react-native";
 import { classes } from "../../../utils/theme";
 import { NeomorphBox } from "react-native-neomorph-shadows";
 import { useSelector } from "react-redux";
 import { outerShadow, innerShadow } from "../../../utils/globalAnimations";
-import { Animated } from "react-native";
+import { Animated, Easing } from "react-native";
 import * as Haptics from 'expo-haptics';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const AnimationNeomorphBox = Animated.createAnimatedComponent(NeomorphBox);
 
-const NeuMorph = ({ children, width, height, style, onPress, customPressAnimation = {}, containerStyle, pressed }) => {
+const NeuMorph = ({ children, width, height, style, onPress, customPressAnimation = {}, containerStyle, shadowWidthRadius = 8, pressed, value }) => {
     const { mainHue, mainSaturation, mainLightness, secondaryHue, secondarySaturation, secondaryLightness } = useSelector(state => state.app);
-    const pressAnimation = new Animated.Value(0.01);
+    let pressAnimation = new Animated.Value(0.01);
 
     const handlePress = () => {
         if (onPress) {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
             onPress()
         }
     }
-    let count = 0;
 
     useEffect(() => {
         if (pressed) {
-            pressButton();
-        } else {
-            pressButton(0);
+            pressAnimation.setValue(1)
         }
         if (!pressed) {
-            console.log('Heya' + Math.random())
             releaseButton();
         }
+        
     }, [pressed])
 
     const pressButton = (duration = 250) => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
         if (customPressAnimation.exists) {
             Animated.parallel([
                 Animated.timing(pressAnimation, {
                     toValue: 1,
                     duration,
-                    useNativeDriver: false
+                    useNativeDriver: false,
+                    easing: Easing.inOut(Easing.cubic)
                 }),
                 Animated.timing(customPressAnimation.pressAnimation, {
                     toValue: 1,
                     duration,
-                    useNativeDriver: false
+                    useNativeDriver: false,
+                    easing: Easing.inOut(Easing.cubic)
                 })
-            ]).start()
+            ]).start(() => {
+                onPress(value)
+            })
         } else {
             Animated.timing(pressAnimation, {
                 toValue: 1,
                 duration,
-                useNativeDriver: false
+                useNativeDriver: false,
+                easing: Easing.inOut(Easing.cubic)
             }).start()
         }
     }
@@ -61,20 +64,23 @@ const NeuMorph = ({ children, width, height, style, onPress, customPressAnimatio
             Animated.parallel([
                 Animated.timing(pressAnimation, {
                     toValue: 0.01,
-                    duration: 250,
-                    useNativeDriver: false
+                    duration: 1000,
+                    useNativeDriver: false,
+                    easing: Easing.inOut(Easing.cubic)
                 }),
                 Animated.timing(customPressAnimation.pressAnimation, {
                     toValue: 0.01,
-                    duration: 250,
-                    useNativeDriver: false
+                    duration: 1000,
+                    useNativeDriver: false,
+                    easing: Easing.inOut(Easing.cubic)
                 })
             ]).start()
         } else {
             Animated.timing(pressAnimation, {
                 toValue: 0.01,
-                duration: 250,
-                useNativeDriver: false
+                duration: 1000,
+                useNativeDriver: false,
+                easing: Easing.inOut(Easing.cubic)
             }).start()
         }
     }
@@ -89,7 +95,9 @@ const NeuMorph = ({ children, width, height, style, onPress, customPressAnimatio
 
     const handlePressOut = () => {
         if (onPress) {
-            releaseButton();
+            setTimeout(() => {
+                releaseButton();
+            }, 50)
         }
     }
 
@@ -98,21 +106,30 @@ const NeuMorph = ({ children, width, height, style, onPress, customPressAnimatio
         outputRange: [`hsla(${mainHue}, ${mainSaturation}%, ${mainLightness}%, 1)`, `hsla(${secondaryHue}, ${secondarySaturation}%, ${secondaryLightness}%, 1)`]
     })
 
+    const radiusInterpolation = outerShadow.interpolate({
+        inputRange: [0.01, 1],
+        outputRange: [0, shadowWidthRadius]
+    })
+
+    const pressRadiusInterpolation = pressAnimation.interpolate({
+        inputRange: [0.01, 1],
+        outputRange: [0, shadowWidthRadius]
+    })
 
 
     return (
-        <TouchableWithoutFeedback onPress={handlePress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+        <Pressable onPress={handlePress} onPressIn={handlePressIn} onPressOut={() => handlePressOut()}>
             <View>
                 <AnimationNeomorphBox
                     darkShadowColor={`hsla(${mainHue}, ${mainSaturation}%, ${mainLightness - 20}%, 1)`}
-                    lightShadowColor={`hsla(${mainHue}, ${mainSaturation}%, ${mainLightness + 8}%, 1)`}
+                    lightShadowColor={`hsla(${mainHue}, ${mainSaturation}%, ${mainLightness + 10}%, 1)`}
                     style={[
                         {
-                            shadowRadius: 4,
-                            shadowOpacity: outerShadow,
+                            shadowRadius: radiusInterpolation,
+                            shadowOpacity: 1,
                             shadowOffset: {
-                                width: 4,
-                                height: 4
+                                width: radiusInterpolation,
+                                height: radiusInterpolation
                             },
                             borderRadius: 15,
                             backgroundColor: `hsla(${mainHue}, ${mainSaturation}%, ${mainLightness}%, 1)`,
@@ -129,11 +146,11 @@ const NeuMorph = ({ children, width, height, style, onPress, customPressAnimatio
                         darkShadowColor={`hsla(${secondaryHue}, ${secondarySaturation}%, ${secondaryLightness - 12}%, 1)`}
                         lightShadowColor={`hsla(${secondaryHue}, ${secondarySaturation}%, ${secondaryLightness + 6}%, 1)`}
                         style={{
-                            shadowRadius: 4,
+                            shadowRadius: pressRadiusInterpolation,
                             shadowOpacity: pressAnimation,
                             shadowOffset: {
-                                width: 4,
-                                height: 4
+                                width: pressRadiusInterpolation,
+                                height: pressRadiusInterpolation
                             },
                             borderRadius: 15,
                             backgroundColor: colorInterpolation,
@@ -155,7 +172,7 @@ const NeuMorph = ({ children, width, height, style, onPress, customPressAnimatio
                     </AnimationNeomorphBox>
                 </AnimationNeomorphBox>
             </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
     )
 }
 export default NeuMorph;

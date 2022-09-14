@@ -6,6 +6,7 @@ const state = Store.getState();
 
 export const textColor = state.app.textColor;
 export const bgColor = `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`;
+export const secondaryColor = `hsla(${state.app.secondaryHue}, ${state.app.secondarySaturation}%, ${state.app.secondaryLightness}%, 1)`;
 export const disabledColor = `hsla(${state.app.mainHue}, ${state.app.mainSaturation}%, ${state.app.mainLightness}%, 1)`;
 
 export const theme = extendTheme({

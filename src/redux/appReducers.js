@@ -9,16 +9,12 @@ import {
 
 const initialState = {
     mainHue: 208,
-    mainSaturation: 0,
-    mainLightness: 13,
-    secondaryHue: 277,
-    secondarySaturation: 100,
-    secondaryLightness: 60,
-    // secondaryHue: 214,
-    // secondarySaturation: 61,
-    // secondaryLightness: 45,
-    // textColor: "#424242"
-    textColor: "#F7F9EF"
+    mainSaturation: 50,
+    mainLightness: 89,
+    secondaryHue: 214,
+    secondarySaturation: 61,
+    secondaryLightness: 45,
+    textColor: "#424242"
 }
 
 function appReducer(state = initialState, action) {

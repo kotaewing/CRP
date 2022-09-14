@@ -69,7 +69,7 @@ const NeuMorphTabButton = ({ children, width, height, style, onPress, customPres
                             width: 4,
                             height: 4
                         },
-                        borderRadius: 15,
+                        borderRadius: 50,
                         backgroundColor: `hsla(${mainHue}, ${mainSaturation}%, ${mainLightness}%, 1)`,
                         width: width,
                         height: height,
@@ -88,7 +88,7 @@ const NeuMorphTabButton = ({ children, width, height, style, onPress, customPres
                                 width: 4,
                                 height: 4
                             },
-                            borderRadius: 15,
+                            borderRadius: 50,
                             backgroundColor: colorInterpolation,
                             width: width - 6,
                             height: height - 6,

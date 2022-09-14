@@ -53,6 +53,7 @@ const BUTTONS = [
 
 const DailyCheck = ({ navigation, addDailyCheck }) => {
     const [rating, setRating] = useState(0);
+    const [pressed, setPressed] = useState(0)
 
     navigation.addListener('beforeBlur', () => setRating(0))
 
@@ -95,7 +96,7 @@ const DailyCheck = ({ navigation, addDailyCheck }) => {
                             outputRange: [textColor, bgColor]
                         })
                         return (
-                            <NeuMorph height={80} width={80} key={button.id} containerStyle={{ margin: 12 }} pressed={rating === button.value} customPressAnimation={{ pressAnimation: buttonAnimationVal, exists: true }} onPress={() => setRating(button.value)}>
+                            <NeuMorph height={80} width={80} key={button.id} value={button.value} containerStyle={{ margin: 12 }} pressed={rating === button.value} customPressAnimation={{ pressAnimation: buttonAnimationVal, exists: true }} onPress={setRating}>
                                 <Animated.Text style={{ fontSize: 32, fontWeight: 'bold', color: buttonColorInterpolation }}>
                                     {button.value}
                                 </Animated.Text>
