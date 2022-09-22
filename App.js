@@ -4,12 +4,7 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DailyCheck from './src/components/DailyCheck/DailyCheck';
-import Home from "./src/components/Home/Home";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PersonalWarnings from "./src/components/Setup/PersonalWarnings";
 import { NativeBaseProvider } from 'native-base';
-import SelfManagementStrategies from "./src/components/Setup/SelfManagementStrategies";
 import { classes } from "./utils/theme";
 import {
   useFonts,
@@ -44,8 +39,9 @@ const MyTheme = {
   },
 };
 
- const App = () => {
+const App = () => {
   const [loading, setLoading] = useState(false);
+  const [planData, setPlanData] = useState([])
 
   // Check what we can do to make this work
   let [fontsLoaded] = useFonts({
@@ -75,6 +71,7 @@ const MyTheme = {
   }, [fontsLoaded])
 
   useEffect(() => {
+    loadApp();
     Permissions.getAsync(Permissions.NOTIFICATIONS).then((statusObj) => {
       if (statusObj.status !== "granted") {
         return Permissions.askAsync(Permissions.NOTIFICATIONS)
@@ -87,19 +84,30 @@ const MyTheme = {
     })
   }, [])
 
+
+  const loadApp = async () => {
+    setLoading(true)
+    const warnings = await AsyncStorage.getItem('warnings');
+    const strategies = await AsyncStorage.getItem('strategies');
+    const reasons = await AsyncStorage.getItem('reasons');
+    const social = await AsyncStorage.getItem('social');
+    const professional = await AsyncStorage.getItem('professional');
+
+    setPlanData([warnings, strategies, reasons, social, professional])
+  }
+
+
   return (
     <View style={classes.background}>
       <NativeBaseProvider>
         <Provider store={Store}>
-          <PersistGate loading={null} persistor={persistor}>
-            {loading ?
-              <SplashScreen />
-              :
-              <NavigationContainer theme={MyTheme}>
-                <BottomNavigation />
-              </NavigationContainer>
-            }
-          </PersistGate>
+          {loading ?
+            <SplashScreen />
+            :
+            <NavigationContainer theme={MyTheme}>
+              <BottomNavigation />
+            </NavigationContainer>
+          }
         </Provider>
       </NativeBaseProvider>
     </View>

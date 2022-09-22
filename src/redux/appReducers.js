@@ -17,7 +17,7 @@ const initialState = {
     textColor: "#424242"
 }
 
-function appReducer(state = initialState, action) {
+export default function (state = initialState, action) {
     switch (action.type) {
         case SET_MAIN_HUE:
             return { ...state, mainHue: action.payload }
@@ -35,5 +35,3 @@ function appReducer(state = initialState, action) {
             return {...state};
     }
 }
-
-export default appReducer;

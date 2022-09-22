@@ -7,6 +7,7 @@ import { classes, textColor, bgColor } from '../../../utils/theme';
 import NeuMorph from '../NeuMorphComponents/NeuMorph';
 import { outerShadow, textAnimation } from '../../../utils/globalAnimations';
 import NeuMorphButton from '../NeuMorphComponents/NeuMorphButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BUTTONS = [
     {
@@ -53,14 +54,6 @@ const BUTTONS = [
 
 const DailyCheck = ({ navigation, addDailyCheck }) => {
     const [rating, setRating] = useState(0);
-    const [pressed, setPressed] = useState(0)
-
-    navigation.addListener('beforeBlur', () => setRating(0))
-
-    const textColorInterpolation = textAnimation.interpolate({
-        inputRange: [0.01, 1],
-        outputRange: [textColor, bgColor]
-    })
 
     const markDone = () => {
         const dailyCheckObj = {
@@ -89,15 +82,9 @@ const DailyCheck = ({ navigation, addDailyCheck }) => {
 
                 <View style={[classes.dailyCheckButtonContainer, { marginBottom: 30 }]}>
                     {BUTTONS.map(button => {
-                        const buttonAnimationVal = new Animated.Value(0.01);
-
-                        const buttonColorInterpolation = buttonAnimationVal.interpolate({
-                            inputRange: [0.01, 1],
-                            outputRange: [textColor, bgColor]
-                        })
                         return (
-                            <NeuMorph height={80} width={80} key={button.id} value={button.value} containerStyle={{ margin: 12 }} pressed={rating === button.value} customPressAnimation={{ pressAnimation: buttonAnimationVal, exists: true }} onPress={setRating}>
-                                <Animated.Text style={{ fontSize: 32, fontWeight: 'bold', color: buttonColorInterpolation }}>
+                            <NeuMorph height={80} width={80} key={button.id} value={button.value} containerStyle={{ margin: 12 }} pressed={rating === button.value} onPress={() => setRating(button.value)}>
+                                <Animated.Text style={{ fontSize: 32, fontWeight: 'bold', color: rating === button.value ? bgColor : textColor }}>
                                     {button.value}
                                 </Animated.Text>
                             </NeuMorph>

@@ -7,18 +7,38 @@ import {
     ADD_DAILY_CHECK
 } from "./crpActions";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const initialState = {
     warnings: [],
     strategies: [],
     reasons: [],
     social: [],
     professional: [],
-    dailyChecks: [],
-    mainHue: "208",
-    secondaryHue: "216"
+    dailyChecks: []
 }
 
-function crpReducer(state = initialState, action) {
+AsyncStorage.getItem('warnings').then(res => {
+    initialState.warnings = JSON.parse(res);
+});
+
+AsyncStorage.getItem('strategies').then(res => {
+    initialState.strategies = JSON.parse(res);
+});
+
+AsyncStorage.getItem('reasons').then(res => {
+    initialState.reasons = JSON.parse(res);
+});
+
+// AsyncStorage.getItem('social').then(res => {
+//     initialState.social = JSON.parse(res);
+// });
+
+// AsyncStorage.getItem('professional').then(res => {
+//     initialState.professional = JSON.parse(res);
+// });
+
+export default function (state = initialState, action) {
     switch (action.type) {
         case SET_PERSONAL_WARNINGS:
             return { ...state, warnings: action.payload }
@@ -36,5 +56,3 @@ function crpReducer(state = initialState, action) {
             return {...state};
     }
 }
-
-export default crpReducer;

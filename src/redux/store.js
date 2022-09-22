@@ -1,18 +1,18 @@
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import thunk from "redux-thunk";
-import { persistStore, persistReducer } from "redux-persist";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { combineReducers } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
+import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import crpReducer from "./crpReducers";
 import appReducer from "./appReducers";
 
 const rootReducer = combineReducers({ crp: crpReducer, app: appReducer })
 
-const persistConfig = {
-    key: 'root',
-    storage: AsyncStorage,
-}
-
-const persistedReducer = persistReducer(persistConfig, rootReducer)
-
-export const Store = createStore(persistedReducer, applyMiddleware(thunk));
+export const Store = configureStore({
+    reducer: rootReducer,
+    devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+        }
+    })
+})
 export const persistor = persistStore(Store)

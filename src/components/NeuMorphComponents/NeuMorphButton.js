@@ -1,5 +1,5 @@
-import { View, TouchableWithoutFeedback } from "react-native";
-import { classes, textColor, bgColor } from "../../../utils/theme";
+import { View, TouchableWithoutFeedback, Pressable } from "react-native";
+import { classes, textColor, bgColor, secondaryColor } from "../../../utils/theme";
 import { NeomorphBox } from "react-native-neomorph-shadows";
 import { useSelector } from "react-redux";
 import { outerShadow, innerShadow } from "../../../utils/globalAnimations";
@@ -26,6 +26,7 @@ const NeuMorphButton = ({ buttonText, width, height, style, onPress, containerSt
     }
 
     const pressButton = (duration = 250) => {
+        
         Animated.parallel([
             Animated.timing(pressAnimation, {
                 toValue: 1,
@@ -57,9 +58,7 @@ const NeuMorphButton = ({ buttonText, width, height, style, onPress, containerSt
 
     const handlePressIn = () => {
         if (!disabled) {
-            setTimeout(() => {
-                pressButton();
-            }, 50)
+            pressButton();
         }
     }
 
@@ -77,7 +76,7 @@ const NeuMorphButton = ({ buttonText, width, height, style, onPress, containerSt
 
 
     return (
-        <TouchableWithoutFeedback onPress={handlePress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
+        <Pressable onPress={handlePress} onPressIn={handlePressIn} onPressOut={handlePressOut}>
             <View>
                 <AnimationNeomorphBox
                     darkShadowColor={`hsla(${mainHue}, ${mainSaturation}%, ${mainLightness - 20}%, 1)`}
@@ -100,40 +99,26 @@ const NeuMorphButton = ({ buttonText, width, height, style, onPress, containerSt
                         containerStyle
                     ]}
                 >
-                    <AnimationNeomorphBox
-                        inner
-                        darkShadowColor={`hsla(${secondaryHue}, ${secondarySaturation}%, ${secondaryLightness - 12}%, 1)`}
-                        lightShadowColor={`hsla(${secondaryHue}, ${secondarySaturation}%, ${secondaryLightness + 6}%, 1)`}
-                        style={{
-                            shadowRadius: 4,
-                            shadowOpacity: pressAnimation,
-                            shadowOffset: {
-                                width: 4,
-                                height: 4
+                    <Animated.View
+                        style={[
+                            classes.pressedInner,
+                            {
+                                width: width - 5 || 40,
+                                height: height - 5 || 40,
+                                borderRadius: 12,
+                                opacity: outerShadow,
+                                backgroundColor: colorInterpolation
                             },
-                            borderRadius: 15,
-                            backgroundColor: colorInterpolation,
-                            width: width - 6,
-                            height: height - 6,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        }}
+                            style
+                        ]}
                     >
-                        <Animated.View
-                            style={[
-                                classes.pressedInner,
-                                { width: width || 40, height: height || 40, borderRadius: 15, opacity: outerShadow },
-                                style
-                            ]}
-                        >
-                            <Animated.Text style={[classes.subText, { color: disabled ? "transparent" : textColorInterpolation }]}>
-                                {buttonText}
-                            </Animated.Text>
-                        </Animated.View>
-                    </AnimationNeomorphBox>
+                        <Animated.Text style={[classes.subText, { color: disabled ? "transparent" : textColorInterpolation }]}>
+                            {buttonText}
+                        </Animated.Text>
+                    </Animated.View>
                 </AnimationNeomorphBox>
             </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
     )
 }
 export default NeuMorphButton;

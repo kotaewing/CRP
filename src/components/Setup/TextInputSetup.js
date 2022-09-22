@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const MINIMUM_NUMBER = 5;
 
-const PersonalWarnings = ({ setWarnings, width, done }) => {
+const TextInputSetup = ({ setWarnings, width, done }) => {
     const { warnings } = useSelector(state => state.crp)
 
     useEffect(() => {
@@ -115,4 +115,4 @@ const mapActionsToProps = {
     setWarnings
 }
 
-export default connect(null, mapActionsToProps)(PersonalWarnings);
+export default connect(null, mapActionsToProps)(TextInputSetup);
