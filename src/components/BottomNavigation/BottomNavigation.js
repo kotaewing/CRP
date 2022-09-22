@@ -6,6 +6,7 @@ import { classes } from "../../../utils/theme";
 
 import Home from "../Home/Home";
 import DailyCheck from "../DailyCheck/DailyCheck";
+import TodaysFocus from "../DailyCheck/TodaysFocus";
 import Setup from "../Setup/Setup";
 
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,23 @@ const HomeStackScreen = () => {
     )
 }
 
+const DailyCheckStack = createNativeStackNavigator();
+
+const DailyCheckScreen = () => {
+    return (
+        <DailyCheckStack.Navigator
+            screenOptions={{
+                headerShown: false,
+                header: () => null,
+                animation: 'none'
+            }}
+        >
+            <DailyCheckStack.Screen name="Daily Check" component={DailyCheck} />
+            <DailyCheckStack.Screen name="TodaysFocus" component={TodaysFocus} />
+        </DailyCheckStack.Navigator>
+    )
+}
+
 const BottomNavigation = () => {
     return (
         <Tab.Navigator
@@ -42,8 +60,8 @@ const BottomNavigation = () => {
             }}
             tabBar={props => <MyTabBar {...props} />}
         >
-            <Tab.Screen name="Home" component={HomeStackScreen} />
-            <Tab.Screen name="DailyCheck" component={DailyCheck} />
+            <Tab.Screen name="HomeStack" component={HomeStackScreen} />
+            <Tab.Screen name="DailyCheckStack" component={DailyCheckScreen} />
         </Tab.Navigator>
     )
 }
@@ -86,9 +104,9 @@ function MyTabBar({ state, descriptors, navigation }) {
                 };
 
                 const icon = () => {
-                    if (label === "Home") {
+                    if (label === "HomeStack") {
                         return "home"
-                    } else if (label === "DailyCheck") {
+                    } else if (label === "DailyCheckStack") {
                         return "smile"
                     }
                 }

@@ -33,6 +33,7 @@ import { Provider } from 'react-redux';
 import { Store, persistor } from './src/redux/store';
 import { PersistGate } from "redux-persist/integration/react";
 import BottomNavigation from "./src/components/BottomNavigation/BottomNavigation";
+import { StatusBar } from 'expo-status-bar';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -96,6 +97,7 @@ const MyTheme = {
               :
               <NavigationContainer theme={MyTheme}>
                 <BottomNavigation />
+                <StatusBar style="dark" />
               </NavigationContainer>
             }
           </PersistGate>
