@@ -50,7 +50,7 @@ const PersonalWarnings = ({ setWarnings, width, done }) => {
     const handleChange = (text, warningId) => {
         let newWarnings = [...warnings];
         let i = newWarnings.findIndex(warning => warning.id === warningId)
-        newWarnings[i].warning = text;
+        newWarnings[i].text = text;
         setWarnings(newWarnings);
     }
 
@@ -95,7 +95,7 @@ const PersonalWarnings = ({ setWarnings, width, done }) => {
                                                 onPress={() => deleteWarningSign(warning.id)}
                                             />
                                     }
-                                    value={warning.warning}
+                                    value={warning.text}
                                     onChangeText={(e) => handleChange(e, warning.id)}
                                 />
                             </Card>

@@ -103,13 +103,17 @@ function MyTabBar({ state, descriptors, navigation }) {
                     });
                 };
 
-                const icon = () => {
-                    if (label === "HomeStack") {
-                        return "home"
-                    } else if (label === "DailyCheckStack") {
-                        return "smile"
-                    }
-                }
+                const icon =
+                    label === "HomeStack" ? { name: "home", type: "feather" }
+                    : { name: "checkcircleo", type: 'antdesign' }
+
+                // const icon = () => {
+                //     if (label === "HomeStack") {
+                //         return "home"
+                //     } else if (label === "DailyCheckStack") {
+                //         return "smile"
+                //     }
+                // }
 
                 return (
                     <>
@@ -120,10 +124,11 @@ function MyTabBar({ state, descriptors, navigation }) {
                             testID={options.tabBarTestID}
                             onPress={onPress}
                             onLongPress={onLongPress}
+                            key={options.tabBarTestID}
                         >
                             <Icon
-                                name={icon()}
-                                type='feather'
+                                name={icon.name}
+                                type={icon.type}
                                 color={isFocused ? '#2C69B7' : "gray"}
                                 size={40}
                             />

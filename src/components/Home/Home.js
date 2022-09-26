@@ -37,7 +37,7 @@ const Home = ({ navigation }) => {
         <View
             style={{
                 flex: 1,
-                paddingHorizontal: 20
+                paddingHorizontal: 10
             }}
         >
             <Text style={{
@@ -67,7 +67,7 @@ const Home = ({ navigation }) => {
                     </Text>
                     {warnings.map(warning => {
                         return (
-                            <Text key={warning.id}>{warning.warning}</Text>
+                            <Text key={warning.id}>{warning.text}</Text>
                         )
                     })}
                 </Card>
@@ -84,7 +84,41 @@ const Home = ({ navigation }) => {
                     </Text>
                     {strategies.map(strategy => {
                         return (
-                            <Text key={strategy.id}>{strategy.strategy}</Text>
+                            <Text key={strategy.id}>{strategy.text}</Text>
+                        )
+                    })}
+                </Card>
+                <Card containerStyle={classes.card}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontFamily: 'Rubik_600SemiBold',
+                        marginBottom: 10
+                    }}>
+                        {"Reasons To Live"}
+                    </Text>
+                    {reasons.map(reason => {
+                        return (
+                            <Text key={reason.id}>{reason.text ? reason.text : ""}</Text>
+                        )
+                    })}
+                </Card>
+                <Card containerStyle={classes.card}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        fontWeight: "bold",
+                        textAlign: 'center',
+                        fontFamily: 'Rubik_600SemiBold',
+                        marginBottom: 10
+                    }}>
+                        {"Reasons To Live"}
+                    </Text>
+                    {reasons.map(reason => {
+                        return (
+                            <Text key={reason.id}>{reason.reason ? reason.reason : ""}</Text>
                         )
                     })}
                 </Card>

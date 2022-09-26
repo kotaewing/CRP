@@ -85,7 +85,8 @@ const DailyCheck = ({ navigation, addDailyCheck }) => {
                     return (
                         <Button
                             key={button.id}
-                            title={<Text style={{ fontSize: 30 }}>{button.value}</Text>}
+                            title={<Text style={{ fontSize: 30, color: rating === button.value ? "white" : 'black' }}>{button.value}</Text>}
+
                             buttonStyle={[classes.card, {
                                 height: 80, width: 80, borderRadius: 50, margin: 12
                             }]}

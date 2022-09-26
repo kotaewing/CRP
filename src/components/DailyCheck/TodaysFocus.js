@@ -4,6 +4,7 @@ import { Slider, Text, Icon, Button, Card } from '@rneui/themed';
 import { addDailyCheck } from '../../redux/crpActions';
 import { connect, useSelector } from 'react-redux';
 import { classes } from '../../../utils/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const RATING_TEXT_DICT = {
     1: {
@@ -29,15 +30,18 @@ const RATING_TEXT_DICT = {
     },
     8: {
         mainText: "It seems like maybe today was a little hard, remember that these are some things that can help you out!",
-        element: "strategies"
+        element: "strategies",
+        header: "Slef Management Strategies"
     },
     9: {
         mainText: "",
-        element: "warnings"
+        element: "warnings",
+        header: "Personal Warning Signs"
     },
     10: {
         mainText: "Glad to see things are going good! Just be on the lookout for any of these warning signs so we can make sure we keep you feeling your best",
-        element: "warnings"
+        element: "warnings",
+        header: "Personal Warning Signs"
     },
 }
 
@@ -52,10 +56,8 @@ const TodaysFocus = ({ navigation, addDailyCheck, resetState }) => {
             strategies
         }
 
-        // if (dailyChecks.date.toLocaleDateString() === new Date.toLocaleDateString()) {
-        //     navigation.navigate("DailyCheck")
-        // }
-        const todaysRating = dailyChecks.find(check => new Date(check.date).toLocaleDateString() === new Date().toLocaleDateString());
+        // const todaysRating = dailyChecks.find(check => new Date(check.date).toLocaleDateString() === new Date().toLocaleDateString());
+        const todaysRating = dailyChecks[dailyChecks.length - 1];
         setTodaysFocus({
             message: RATING_TEXT_DICT[todaysRating.rating],
             element: lookupElement[RATING_TEXT_DICT[todaysRating.rating].element]
@@ -88,17 +90,16 @@ const TodaysFocus = ({ navigation, addDailyCheck, resetState }) => {
                 }}>
                     {"Today's Focus"}
                 </Text>
-                <Card containerStyle={[classes.card]}>
-                    <Text style={{
-                        paddingBottom: 20,
-                        alignSelf: 'center',
-                        fontSize: 20,
-                        fontWeight: "bold"
-                    }}
-                    >
-                        {todaysFocus ? todaysFocus.message.mainText : ""}
-                    </Text>
-                </Card>
+                <Text style={{
+                    paddingTop: 50,
+                    paddingBottom: 20,
+                    alignSelf: 'center',
+                    fontSize: 20,
+                    fontWeight: "bold"
+                }}
+                >
+                    {todaysFocus ? todaysFocus.message.mainText : ""}
+                </Text>
                 <Card containerStyle={[classes.card, { backgroundColor: "#2C69B7" }]}>
                     <Text style={{
                         alignSelf: 'center',
@@ -109,11 +110,11 @@ const TodaysFocus = ({ navigation, addDailyCheck, resetState }) => {
                         marginBottom: 10,
                         color: 'white'
                     }}>
-                        {"Personal Warning Signs"}
+                        {todaysFocus && todaysFocus.message.header}
                     </Text>
-                    {todaysFocus.element.map(element => {
+                    {todaysFocus && todaysFocus.element.map(element => {
                         return (
-                            <Text key={element.id}>{element.strategy}</Text>
+                            <Text key={element.id} style={{ color: 'white' }} >{element.text}</Text>
                         )
                     })}
                 </Card>
@@ -133,7 +134,8 @@ const styles = StyleSheet.create({
     contentView: {
         width: '100%',
         justifyContent: 'center',
-        alignItems: 'stretch'
+        alignItems: 'stretch',
+        paddingHorizontal: 10
     }
 });
 

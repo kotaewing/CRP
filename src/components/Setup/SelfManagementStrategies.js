@@ -44,7 +44,7 @@ const SelfManagementStrategies = ({ setStrategies, width, done }) => {
     const handleChange = (text, strategyId) => {
         let newStrategies = [...strategies];
         let i = newStrategies.findIndex(strategy => strategy.id === strategyId)
-        newStrategies[i].strategy = text;
+        newStrategies[i].text = text;
         setStrategies(newStrategies);
     }
 
@@ -90,7 +90,7 @@ const SelfManagementStrategies = ({ setStrategies, width, done }) => {
                                             onPress={() => deleteStrategy(strategy.id)}
                                         />
                                 }
-                                value={strategy.strategy}
+                                value={strategy.text}
                                 onChangeText={(e) => handleChange(e, strategy.id)}
                             />
                         </Card>

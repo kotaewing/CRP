@@ -50,7 +50,7 @@ const ReasonsToLive = ({ setReasons, width, done }) => {
     const handleChange = (text, reasonId) => {
         let newReasons = [...reasons];
         let i = newReasons.findIndex(reason => reason.id === reasonId)
-        newReasons[i].reason = text;
+        newReasons[i].text = text;
         setReasons(newReasons);
     }
 
@@ -95,7 +95,7 @@ const ReasonsToLive = ({ setReasons, width, done }) => {
                                                 onPress={() => deleteReasonToLive(reason.id)}
                                             />
                                     }
-                                    value={reason.reason}
+                                    value={reason.text}
                                     onChangeText={(e) => handleChange(e, reason.id)}
                                 />
                             </Card>
